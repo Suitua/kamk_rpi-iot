@@ -10,11 +10,22 @@ The RPI Gateway listens for the RF24 and relays the data to ThingSpeak cloud ser
 raspberry Pi Model B+ and Raspberry Pi 2 Model B, both running Raspbian (Debian Wheezy).
 
 Raspberry Pi UI (Qt_Quick_Housemonitor) is the user interface that displays the data measured by Arduino node(s). 
-The UI is meant to run on Raspberry Pi equipped with a small LCD display.
+The UI is meant to run on Raspberry Pi equipped with a small LCD display. The UI is made using the Qt creator IDE.
 
-/********************************************************************************************************************************/
+/***************************************************************************************************************************/
 
-THINGS REQUIRED TO RUN THE PROJECT:
+WHAT IS REQUIRED TO RUN THE PROJECT:
 
-Raspberry Pi (pref. Model B+ or newer) with a working Internet connection
+Raspberry Pi (pref. Model B+ or newer) with a working Internet connection.
+Small touch screen for Raspberry Pi or an ordinary screen and a mouse.
 Arduino prototyping platform
+Two RF24 (nRF24L01) radios
+Arduino IDE.
+PC with a Qt Creator Ide and a crosscompiler that can produce binaries for Raspberry
+or 
+you can compile the Raspberry projects on RPI but it takes some time.
+
+Links:
+https://www.arduino.cc/en/Main/Software
+http://www.qt.io/ide/
+https://wiki.qt.io/RaspberryPi_Beginners_Guide
