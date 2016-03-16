@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>RoomView.qml</file>
+        <file>RoomTempGauge.qml</file>
+        <file>RoomDoor.qml</file>
+    </qresource>
+</RCC>
