@@ -1,23 +1,3 @@
-/*
-*  Copyright (C) 2016, Timo Leinonen <timojt.leinonen@gmail.com>
-*  
-*  This program is free software: you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, either version 3 of the License, or
-*  (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-*  Version 1.0
-*  Author: Timo Leinonen
-*/
-
 #include "thread.h"
 
 Thread::Thread()
@@ -39,8 +19,10 @@ Thread::Thread()
 
 Thread::~Thread()
 {
+#ifdef PTHREAD_CANCEL_ENABLE
     if(true == m_bIsRunning)
         Cancel();
+#endif
 
 }
 
@@ -130,13 +112,14 @@ bool Thread::Run(int count, bool bPauseAutomatically)
     m_bHasExited = false;
 
 
-
+#ifdef PTHREAD_CANCEL_ENABLE
     if(pthread_attr_setinheritsched(&m_aAttr, PTHREAD_EXPLICIT_SCHED))
     {
         GenerateErrorMessage();
         m_bNewErrMsg = true;
         return false;
     }
+#endif
 
     if (pthread_create(&m_tWorkerThread, &m_aAttr, startThreadFuncion, this))
     {
@@ -244,7 +227,7 @@ bool Thread::Stop()
     m_mRunMutex.Release();
     return true;
 }
-
+#ifdef PTHREAD_CANCEL_ENABLE
 bool Thread::Cancel()
 {
     if (!IsInitialized())
@@ -276,24 +259,6 @@ bool Thread::Cancel()
         return true;
     }
 
-}
-
-bool Thread::Join(void ** retData)
-{
-    if(!IsRunning() && !m_bHasExited)
-    {
-        strcpy(m_szLastError, "Thread not started yet.");
-        m_bNewErrMsg = true;
-        return false;
-    }
-
-    if (pthread_join(m_tWorkerThread,retData))
-    {
-        GenerateErrorMessage();
-        m_bNewErrMsg = true;
-        return false;
-    }
-    return true;
 }
 
 bool Thread::SetPriority(int prio)
@@ -328,7 +293,7 @@ bool Thread::SetAffinity(int cpus)
 
 
      CPU_ZERO(&m_cCpuset);
-     for (int j = 0; j < MAX_NUM_OF_CPUS; j++)     
+     for (int j = 0; j < MAX_NUM_OF_CPUS; j++)
          if(cpus & (1<<j))
             CPU_SET(j, &m_cCpuset);
 
@@ -364,6 +329,26 @@ int Thread::GetAffinity()
 
    return cpuSet;
 }
+#endif
+bool Thread::Join(void ** retData)
+{
+    if(!IsRunning() && !m_bHasExited)
+    {
+        strcpy(m_szLastError, "Thread not started yet.");
+        m_bNewErrMsg = true;
+        return false;
+    }
+
+    if (pthread_join(m_tWorkerThread,retData))
+    {
+        GenerateErrorMessage();
+        m_bNewErrMsg = true;
+        return false;
+    }
+    return true;
+}
+
+
 
 bool Thread::IsInitialized()
 {

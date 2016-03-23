@@ -1,27 +1,5 @@
-/*
-*  Copyright (C) 2016, Timo Leinonen <timojt.leinonen@gmail.com>
-*  
-*  This program is free software: you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, either version 3 of the License, or
-*  (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-*  Version 1.0
-*  Author: Timo Leinonen
-*/
-
 #include "thingspeakclient.h"
-#include <stdio.h>
-#include <string>
-#include "strlib.h"
+
 
 
 ThingSpeakClient::ThingSpeakClient()
@@ -62,7 +40,9 @@ bool ThingSpeakClient::setField(const int field, const int val)
         return false;
     }
 
-    m_szFieldData[field-1] = std::to_string(val);
+    char buf[16];
+    sprintf(buf,"%d",val);
+    m_szFieldData[field-1] = buf;
     return true;
 }
 
@@ -74,7 +54,9 @@ bool ThingSpeakClient::setField(const int field, const double val)
         return false;
     }
 
-    m_szFieldData[field-1] = std::to_string(val);
+    char buf[16];
+    sprintf(buf,"%f",val);
+    m_szFieldData[field-1] = buf;
     return true;
 
 }
@@ -135,7 +117,9 @@ const char *ThingSpeakClient::readStringField(const int field, const char *chann
     szURI = "https://api.thingspeak.com/channels/";
     szURI += channelNum;
     szURI += "/field/";
-    szURI += std::to_string(field);
+    char buf[16];
+    sprintf(buf,"%d",field);
+    szURI += buf;
     szURI += "/last";
 
     //Add the API key to the URI if it's given (apparently this is the only way it will work, if you are reading data)
@@ -266,6 +250,7 @@ void ThingSpeakClient::resetFields()
 void ThingSpeakClient::fieldDataToStr()
 {
     bool first = true;
+    char buf[16];
     for(int i = 0; i < THINGSPEAK_MAX_FIELDS;i++)
     {
         if(!m_szFieldData[i].empty())
@@ -276,7 +261,8 @@ void ThingSpeakClient::fieldDataToStr()
             }
 
             m_szFieldDataStr += "field";
-            m_szFieldDataStr += std::to_string(i+1);
+            sprintf(buf,"%d",i+1);
+            m_szFieldDataStr += buf;
             m_szFieldDataStr += "=";
             m_szFieldDataStr += m_szFieldData[i];
 

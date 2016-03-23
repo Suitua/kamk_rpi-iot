@@ -1,26 +1,8 @@
-/*
-*  Copyright (C) 2016, Timo Leinonen <timojt.leinonen@gmail.com>
-*  
-*  This program is free software: you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, either version 3 of the License, or
-*  (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-*  Version 1.0
-*  Author: Timo Leinonen
-*/
-
 #include "strlib.h"
 #include <string.h>
 #include <algorithm>
+
+
 
 
 void strlib::filterStr(char *str, char toBeRemoved)
@@ -277,7 +259,7 @@ int strlib::extractStr(const char *str_in, const char delim, char *str_out)
     }
 
     str_out[i] = '\0';
-    return i+1;
+    return i;
 
 }
 
@@ -299,9 +281,77 @@ int strlib::extractStr(const char * str_in, const char delim, std::string &str_o
         }
     }
 
-    return i+1;
+    return i;
 }
 
 
+int strlib::strToInt(const char *str)
+{
+    int temp = 0;
+
+    int i;
+
+    for(i = 0;str[i];i++)
+    {
+        if(str[i] <='9' && str[i] >='0')
+        {
+            temp = temp * 10 + str[i] -'0';
+        }
+
+        else
+            break;
+    }
+
+    if (i == 0)
+        return 0;
+    else
+
+        return temp;
+
+
+}
+
+float strlib::strToFloat(const char *str)
+{
+    float temp = 0;
+
+    bool decPointFound = false;
+    int decimal = 0;
+
+    int i;
+
+    for(i = 0;str[i];i++)
+    {
+        if(str[i] <='9' && str[i] >='0')
+        {
+            if (decPointFound)
+            {
+                decimal++;
+                temp = temp  + (double(str[i] -'0')) *(pow(10,-decimal));
+            }
+            else
+            {
+               temp = temp * 10 + str[i] -'0';
+            }
+
+        }
+
+        else if(str[i] =='.' || str[i] ==',')
+        {
+           decPointFound = true;
+        }
+
+
+        else
+            break;
+    }
+
+    if (i == 0)
+        return 0;
+    else
+    {
+        return temp;
+    }
+}
 
 

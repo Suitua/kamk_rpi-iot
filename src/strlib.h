@@ -1,23 +1,3 @@
-/*
-*  Copyright (C) 2016, Timo Leinonen <timojt.leinonen@gmail.com>
-*  
-*  This program is free software: you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, either version 3 of the License, or
-*  (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-*  Version 1.0
-*  Author: Timo Leinonen
-*/
-
 #ifndef STRLIB_H
 #define STRLIB_H
 #include <stdbool.h>
@@ -48,6 +28,9 @@ namespace strlib
     //Extracts (copies a letter by letter) a string from the str_in to the str_out, stops when the delimiter is found
     int extractStr(const char * str_in, const char delim, char *str_out);
     int extractStr(const char * str_in, const char delim, std::string & str_out);
+
+    int strToInt(const char *str);
+    float strToFloat(const char * str);
 }
 
 #endif // STRLIB_H

@@ -1,25 +1,7 @@
-/*
-*  Copyright (C) 2016, Timo Leinonen <timojt.leinonen@gmail.com>
-*  
-*  This program is free software: you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, either version 3 of the License, or
-*  (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-*  Version 1.0
-*  Author: Timo Leinonen
-*/
-
 #ifndef THREAD_H
 #define THREAD_H
+
+#include <sched.h>
 #include "pmutex.h"
 
 #define MAX_NUM_OF_CPUS 8
@@ -56,10 +38,13 @@ public:
     bool Resume();
     //Stops the thread (exits the thread function)
     bool Stop();
-    //Immediately cancels the thread
-    bool Cancel();
+
     //Joins the the thread (waits for it to exit)
     bool Join(void ** retData = NULL);
+
+#ifdef PTHREAD_CANCEL_ENABLE
+    //Immediately cancels the thread
+    bool Cancel();
     //Sets thread priority
     bool SetPriority(int prio);
     //Gets the priority
@@ -68,6 +53,7 @@ public:
     bool SetAffinity(int cpus);
     //Gets the affinity
     int GetAffinity();
+#endif
 
     //Checks if the thread is initialized
     bool IsInitialized();
@@ -85,8 +71,12 @@ private:
     void * loop();                    //The run loop for the thread
     PMutex m_mRunMutex;
     pthread_t m_tWorkerThread;      //worker thread
-    cpu_set_t m_cCpuset;            //Cpu set
+    //cpu_set_t m_cCpuset;            //Cpu set
+
+
+#ifdef PTHREAD_CANCEL_ENABLE
     pthread_attr_t m_aAttr;         //Thread attributes
+#endif
     struct sched_param m_sSchedPar; //Thread scheduling parameters
 
     int m_iThreadRunCount;          //How many times we want to execute the thread func

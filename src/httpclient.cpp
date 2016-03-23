@@ -1,24 +1,3 @@
-/*
-*  Copyright (C) 2016, Timo Leinonen <timojt.leinonen@gmail.com>
-*  
-*  This program is free software: you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, either version 3 of the License, or
-*  (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-*  Version 1.0
-*  Author: Timo Leinonen
-*/
-
-
 #include "httpclient.h"
 #include "strlib.h"
 #include <stdio.h>
@@ -199,15 +178,15 @@ void HTTPResponse::parseResponseStr()
     if(true == bContainsHeader)
     {
         //Status partition
-        iHead += strlib::extractStr(&m_szResponseStr[iHead],' ',m_szVersion);
-        iHead += strlib::extractStr(&m_szResponseStr[iHead],' ',m_szStatusCode);
+        iHead += strlib::extractStr(&m_szResponseStr[iHead],' ',m_szVersion) +1;
+        iHead += strlib::extractStr(&m_szResponseStr[iHead],' ',m_szStatusCode) +1;
         iHead += strlib::extractStr(&m_szResponseStr[iHead],'\r',m_szStatusText) +1 ;   //plus one to remove the new line
 
         //Header items
         while(m_szResponseStr[iHead])
         {
-            iHead += strlib::extractStr(&m_szResponseStr[iHead],':',m_szHeaderName[m_iHeaderItemCount]) +1; //plus one to remove the space
-            iHead += strlib::extractStr(&m_szResponseStr[iHead],'\r',m_szHeaderData[m_iHeaderItemCount]) +1; //plus one to remove the new line
+            iHead += strlib::extractStr(&m_szResponseStr[iHead],':',m_szHeaderName[m_iHeaderItemCount]) +2; //plus one to remove the space
+            iHead += strlib::extractStr(&m_szResponseStr[iHead],'\r',m_szHeaderData[m_iHeaderItemCount]) +2; //plus one to remove the new line
             m_iHeaderItemCount++;
             if(m_szResponseStr[iHead] == '\r' && m_szResponseStr[iHead+1] == '\n')
             {
